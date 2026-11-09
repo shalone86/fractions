@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fractions",
+  "main": "worker/index.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "ai": { "binding": "AI" },
+  "observability": { "enabled": true },
+  // When the app lives on the hub (angelio.org/<path>/) and still has an old domain, set both and the
+  // old address will redirect there, carrying saved progress (worker/moved.js):
+  // "vars": { "HOME_URL": "https://example.org/fractions/", "STORE_KEY": "fractions:v1" },
+  "workers_dev": true
+  // Custom domain: add a comma after "workers_dev": true and uncomment:
+  // "routes": [{ "pattern": "fractions.example.com", "custom_domain": true }]
+  //
+  // Optional: require a passcode for the voice API (keeps strangers off your Workers AI quota):
+  //   npx wrangler secret put APP_PASSCODE
+}
