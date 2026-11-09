@@ -2,6 +2,7 @@
 // put them on a number line and compare them. Plain ES modules, no build step.
 
 import * as S from "./kit/store.js";
+import { jingleOnce } from "./kit/jingle.js";
 S.init("fractions:v1", {});
 
 import { createRouter } from "./kit/router.js";
@@ -11,7 +12,7 @@ import * as FX from "./kit/fx.js";
 import { keepDockVisible } from "./kit/dock.js";
 import { showLesson } from "./kit/lesson.js";
 import { leadIn, praise, tryAgain, vary } from "./kit/vary.js";
-import { esc, starsHtml, nextButton, showFinish, stickerBook, viewGrownups, installClickSounds, wireVoiceToggle } from "./kit/ui.js";
+import { esc, starsHtml, nextButton, markDot, showFinish, stickerBook, viewGrownups, installClickSounds, wireVoiceToggle } from "./kit/ui.js";
 import { GRADES, STAGES, stageById, PER_STAGE, makeStage, fractionWords, parseFrac, starsFor } from "./fractions.js";
 import { LESSONS } from "./lessons.js";
 import { shapeSvg, barSvg, fracHtml } from "./draw.js";
@@ -112,10 +113,10 @@ function viewPlay(id) {
     const qs = makeStage(stage);
     for (let k = 0; k < qs.length && alive; k++) {
       app.querySelectorAll("[data-dot]").forEach((d) => d.classList.toggle("now", +d.dataset.dot === k));
-      const q = qs[k];
+      const q = qs[k], before = mistakes;
       await ASK[q.type](q, ctx, k === 0 ? "" : `${leadIn()} `);
       if (!alive) return;
-      app.querySelector(`[data-dot="${k}"]`)?.classList.add("done");
+      markDot(app, k, mistakes > before); // yellow if it took a mistake
       S.solvedOne();
       await nextButton(dock, k < qs.length - 1 ? "Next ▶" : "Finish 🏁");
     }
@@ -338,6 +339,7 @@ function numberLine(n) {
 }
 
 installClickSounds();
+jingleOnce("fractions", () => S.settings().sounds); // the app's little logo sound, on the first tap
 route();
 keepDockVisible();
 if ("serviceWorker" in navigator && location.protocol === "https:") {
