@@ -65,7 +65,7 @@ function viewHome() {
       <h1 class="title">Fraction Feast</h1>
       <p class="lede">Cut it, share it, shade it, name it!</p>
       <a class="btn big primary play-btn" href="#/play/${next.id}">▶ Play</a>
-      <div class="row center" style="margin-top:8px;">
+      <div class="row center sense-link">
         <a class="btn small" href="#/sense">⚡ Fraction Sense</a>
       </div>
       <nav class="grade-jump" aria-label="Jump to a grade">
@@ -85,8 +85,14 @@ function viewHome() {
       </section>`).join("")}
     ${stickerBook()}`;
   app.querySelectorAll("[data-grade]").forEach((btn) => {
-    btn.onclick = () => document.getElementById(`grade-${btn.dataset.grade}`)?.scrollIntoView({ behavior: "smooth" });
+    btn.onclick = () => {
+      S.setSetting("lastGrade", Number(btn.dataset.grade));
+      document.getElementById(`grade-${btn.dataset.grade}`)?.scrollIntoView({ behavior: "smooth" });
+    };
   });
+  // Back on Home: open at the grade they were last on (after the router's scroll to the top).
+  const lastG = Number(S.settings().lastGrade || 0);
+  if (lastG > 1) setTimeout(() => document.getElementById(`grade-${lastG}`)?.scrollIntoView({ behavior: "auto", block: "start" }), 0);
 }
 
 // ───────── play ─────────
@@ -94,6 +100,7 @@ function viewHome() {
 function viewPlay(id) {
   const stage = stageById(id);
   if (!stage) { location.hash = "#/"; return; }
+  S.setSetting("lastGrade", stage.grade); // Home opens at this grade next time
   document.body.classList.add("in-game");
   app.innerHTML = `
     <section class="play">

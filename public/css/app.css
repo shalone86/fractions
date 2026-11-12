@@ -126,3 +126,15 @@ b.top { color: var(--frac-top); } b.bottom { color: var(--frac-bottom); }
   .dock-note { font-size: 1.4rem; flex-direction: column; gap: 2px; }
   .lesson-pair .shape { width: 90px; } .lesson-pair .shape.rect { width: 110px; } .lesson-trio .shape { width: 80px; }
 }
+
+/* Fraction Sense */
+.sense-board { padding: 16px 14px; }
+.sense-q { margin: 0; text-align: center; font: 800 1.35rem/1.45 var(--font-body); }
+.sense-q .frac { font-size: 1.25em; }
+.sense-words .choice-card { font-size: 1.05rem; text-align: center; line-height: 1.3; }
+@media (max-width: 480px) { .sense-q { font-size: 1.15rem; } }
+@media (orientation: landscape) and (max-height: 520px) {
+  .sense-q { font-size: 1.1rem; }
+  .sense-words .choice-card { font-size: .9rem; padding: 6px 8px; }
+}
+.sense-link { margin-top: 10px; }
