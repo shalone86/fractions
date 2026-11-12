@@ -16,12 +16,15 @@ import { esc, starsHtml, nextButton, markDot, showFinish, stickerBook, viewGrown
 import { GRADES, STAGES, stageById, PER_STAGE, makeStage, fractionWords, parseFrac, starsFor } from "./fractions.js";
 import { LESSONS } from "./lessons.js";
 import { shapeSvg, barSvg, fracHtml } from "./draw.js";
+import { viewSenseList, viewSense } from "./senseview.js";
 
 const app = document.getElementById("app");
 
 const route = createRouter([
   [/^$/, viewHome],
   [/^play\/([\w-]+)$/, viewPlay],
+  [/^sense$/, () => viewSenseList(app)],
+  [/^sense\/([\w-]+)$/, (id) => viewSense(app, id)],
   [/^grownups$/, () => viewGrownups(app, { about: ABOUT })],
 ], {
   before() { stop(); FX.clearFx(); document.body.classList.remove("in-game"); },
@@ -62,6 +65,9 @@ function viewHome() {
       <h1 class="title">Fraction Feast</h1>
       <p class="lede">Cut it, share it, shade it, name it!</p>
       <a class="btn big primary play-btn" href="#/play/${next.id}">▶ Play</a>
+      <div class="row center" style="margin-top:8px;">
+        <a class="btn small" href="#/sense">⚡ Fraction Sense</a>
+      </div>
       <nav class="grade-jump" aria-label="Jump to a grade">
         ${GRADES.map((g) => `<button type="button" class="grade-chip" data-grade="${g.n}">${g.emoji} Grade ${g.n}</button>`).join("")}
       </nav>
